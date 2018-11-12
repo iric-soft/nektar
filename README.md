@@ -19,14 +19,12 @@ This repository holds several tools to extract the NEKTAR of kmers created by [j
 
 # File format #
 * project.csv:
-* * Tabulated file with a header formatted as follow: SAMPLE,JF,GROUP[,KMER]
-* * This file can be generated automatically with the following script: other/gen_project.py
-* * The column KMER is needed to run nektar_cpp/extract_kmer and this represents the TOTAL number of kmers of sample (not the sum of distinct kmers).
+* * Tabulated file with a header formatted as follow: SAMPLE,JF,GROUP
 
-|SAMPLE |JF             |GROUP  |KMER        |
-| ------|:-------------:| -----:| -----------|
-|X      |/path/kmers.jf |Query  |12965231313 |
-|Y      |/path/kmers.jf |Ref    |14437658538 |
+|SAMPLE |JF             |GROUP  |
+| ------|:-------------:| -----:|
+|X      |/path/kmers.jf |Query  |
+|Y      |/path/kmers.jf |Ref    |
 
 # Pipeline to run nektar #
 * Create jellyfish file for each sample
