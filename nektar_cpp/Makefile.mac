@@ -1,0 +1,29 @@
+
+## C++ compiler supporting openMP (installed using brew)
+CC = /usr/local/opt/llvm/bin/clang++
+
+## stdlib is imported from the standard Xcode install
+CXXFLAGS = -fopenmp -I/usr/local/opt/llvm/include $(shell pkg-config --cflags jellyfish-2.0) -std=c++11 -Wall -Wno-c++11-extensions
+LDFLAGS = -L/usr/local/opt/llvm/lib libomp.a $(shell pkg-config --libs jellyfish-2.0)
+BOOST = -I /Users/ricou/software/boost_1_62_0/
+JELLYFISH = $(shell pkg-config --libs jellyfish-2.0)
+
+all: kmer_assembly
+
+%.o: ../fmindex/%.cc
+	$(CC) -c $(CXXFLAGS) $<
+
+%.o: ./util/%.cc
+	$(CC) -c $(CXXFLAGS) $<
+
+%.o: ./%.cc
+	$(CC) $(BOOST) -c $(CXXFLAGS) $<
+
+fm: fm.o FmIndex.o SeqStore.o BaseRep.o SeqIter.o SeqRange.o StrDict.o util.o
+	$(CC) -o fm $(LDFLAGS) $^
+
+kmer_assembly: kmer_assembly.o Kmer.o
+	$(CC) -o kmer_assembly $(LDFLAGS) $^
+
+clean:
+ 	rm -f *.o kmer_assembly

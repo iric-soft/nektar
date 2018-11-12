@@ -1,0 +1,24 @@
+CC = g++
+#CXXFLAGS = -fopenmp $(shell pkg-config --cflags jellyfish-2.0) -std=c++11 -Wall -static -lm -g -lz -fPIC
+CXXFLAGS = -fopenmp $(shell pkg-config --cflags jellyfish-2.0) -std=c++11 -Wall -O3 -static -lm -g -lz -fPIC
+LDFLAGS = -fopenmp -fPIC -std=c++11 $(shell pkg-config --libs jellyfish-2.0) -Wl,--rpath=$(shell pkg-config --libs-only-L jellyfish-2.0 | sed -e 's/-L//g')
+
+all: kmer_assembly
+
+%.o: ../fmindex/%.cc
+	$(CC) -c $(CXXFLAGS) $<
+
+%.o: ./util/%.cc
+	$(CC) -c $(CXXFLAGS) $<
+
+%.o: ./%.cc
+	$(CC) -c $(CXXFLAGS) $<
+
+fm: FmIndex.o fm.o SeqStore.o BaseRep.o SeqIter.o SeqRange.o StrDict.o util.o
+	$(CC) -o fm $(LDFLAGS) $^
+
+kmer_assembly: kmer_assembly.o Kmer.o FmIndex.o SeqStore.o BaseRep.o SeqIter.o SeqRange.o StrDict.o util.o
+	$(CC) -o kmer_assembly $(LDFLAGS) $^
+
+clean:
+	rm -f *.o kmer_assembly
