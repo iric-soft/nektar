@@ -9,23 +9,11 @@ This repository holds several tools to extract the NEKTAR of kmers created by [j
 * * boost/1.60.0 jellyfish/2.2.3
 * * for kmer_assembly: ulimit -s unlimited
 
-# Installation #
+# Install #
 * Go in fmindex folder and execute the script ./install.sh
 * Go in nektar_cpp folder and choose your makefile (in function of your OS) and execute it (with *make*)
 
 # Help #
 * python *path_to*/nektar.py -h
 * python *path_to*/nektar.py [cmd] -h
-
-# File format #
-* project.csv:
-* * Tabulated file with a header formatted as follow: SAMPLE,JF,GROUP
-
-|SAMPLE |JF             |GROUP  |
-| ------|:-------------:| -----:|
-|X      |/path/kmers.jf |Query  |
-|Y      |/path/kmers.jf |Ref    |
-
-# Pipeline to run nektar #
-* Create jellyfish file for each sample
-* Create the project file
+* *path_to*/kmer_assembly -h

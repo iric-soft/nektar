@@ -46,8 +46,8 @@ typedef uint64_t two_int[2];
 typedef double two_double[2];
 typedef unsigned int uint;
 
-typedef string val_param[8];
-typedef bool bool_param[8];
+typedef string val_param[7];
+typedef bool bool_param[7];
 const int F_PROJECT = 0;
 const int F_KMER = 1;
 const int F_OUT = 2;
@@ -55,7 +55,6 @@ const int K_LEN = 3;
 const int REV = 4;
 const int ASSEMBLY = 5;
 const int DBSNP = 6;
-const int PVALUE = 7;
 
 const char* NUC[5] = {"A", "C", "G", "T", "N"};
 const char* GROUP[2] = {"Ref", "Query"};
@@ -181,6 +180,10 @@ int read_project(const val_param& v_param, map_project& project,
   int cpt_switch = -1;
   string::size_type sz = 0;
   filebuf fb;
+  if (v_param[F_PROJECT]!="") {
+    samples.push_back("Just one");
+    return(0);
+  }
   if (fb.open(v_param[F_PROJECT], ios::in)) {
     istream is_file(&fb);
     string line = "";
@@ -244,7 +247,7 @@ int read_project(const val_param& v_param, map_project& project,
 }
 
 void read_kmer(const val_param& v_param,
-               const vec_str& samples, map_kmer* kmers, 
+               const vec_str& samples, map_kmer* kmers,
                map_pkmer* kmers_not_used, vec_str* k_header) {
   string::size_type sz = 0;
   filebuf fb;
@@ -273,7 +276,7 @@ void read_kmer(const val_param& v_param,
 }
 
 void read_kmer_with_dbsnp(const val_param& v_param,
-                          const vec_str& samples, map_kmer* kmers, 
+                          const vec_str& samples, map_kmer* kmers,
                           map_pkmer* kmers_not_used, vec_str* k_header) {
   string::size_type sz = 0;
   filebuf fb;
@@ -313,7 +316,7 @@ void read_kmer_with_dbsnp(const val_param& v_param,
 // ///////////////////////////////////////////////////////
 
 bool check_kmer(const map_kmer& kmers, const string& cur_kmer,
-               const string& next_kmer, const bool_param& b_param, 
+               const string& next_kmer, const bool_param& b_param,
                const val_param& v_param) {
   //cerr << "check_kmer" << endl;
   bool check = false;
@@ -331,26 +334,12 @@ bool check_kmer(const map_kmer& kmers, const string& cur_kmer,
         check = true;
     }
   }
-  if (check && b_param[PVALUE]) {
-    vector<double> cur_pvalue = kmers.at(cur_kmer).get_score("PVALUE");
-    vector<double> next_pvalue;
-
-    if (rev_kmer.compare("") == 0)  next_pvalue = kmers.at(next_kmer).get_score("PVALUE");
-    else                            next_pvalue = kmers.at(rev_kmer).get_score("PVALUE");
-
-    double diff = abs( abs(log10(cur_pvalue[0])) - abs(log10(next_pvalue[0])) );
-
-    if (diff > atoi(v_param[PVALUE].c_str())) {
-      // cerr << diff << endl;
-      check = false;
-    }
-  }
   return check;
 }
 
 int get_kmers_left(const size_t& kmer_len, const map_kmer& kmers,
                    const string& seq_assembly, const string& seq_cur_kmer,
-                   const bool& left, const bool_param& b_param, 
+                   const bool& left, const bool_param& b_param,
                    const val_param& v_param, four_string* next_kmers) {
   //cerr << "get_kmers_left: " << seq_assembly << endl;
   string next_kmer;
@@ -380,7 +369,7 @@ int get_kmers_left(const size_t& kmer_len, const map_kmer& kmers,
 
 int get_kmers_right(const size_t& kmer_len, const map_kmer& kmers,
                     const string& seq_assembly, const string& seq_cur_kmer,
-                    const bool& left, const bool_param& b_param, 
+                    const bool& left, const bool_param& b_param,
                     const val_param& v_param, four_string* next_kmers) {
   //cerr << "get_kmers_right" << endl;
   string next_kmer;
@@ -535,7 +524,7 @@ void new_vertex(const Kmer& last_kmer, const Kmer& new_kmer,
   }
 }
 
-void backtrack_new_vertex(const Kmer& kmer, vec_str* seq_assembly, 
+void backtrack_new_vertex(const Kmer& kmer, vec_str* seq_assembly,
                           vec_score* score_assembly, vec_int* dbsnp, map_uint* k_vertex,
                           vec_edge* edges, const bool& left,
                           const size_t& kmer_len, const val_param& v_param) {
@@ -561,7 +550,7 @@ void backtrack_new_vertex(const Kmer& kmer, vec_str* seq_assembly,
     (*score_assembly)[vertex].at(it->first).pop_back();// -= it->second;
   }
 
-  
+
 
   //kmer.set_vertex(v_tmp);
   (*k_vertex)[kmer.seq()] = v_tmp;
@@ -578,7 +567,7 @@ void backtrack_new_vertex(const Kmer& kmer, vec_str* seq_assembly,
   }
 }
 
-void extend_many(const Kmer& kmer, vec_str* seq_assembly, 
+void extend_many(const Kmer& kmer, vec_str* seq_assembly,
             vec_score* score_assembly, vec_int* dbsnp, vec_edge* edges,
             map_pkmer* kmers_not_used, const map_kmer& kmers,
             map_uint* k_vertex, const bool& left, const size_t& kmer_len,
@@ -601,7 +590,7 @@ void extend_many(const Kmer& kmer, vec_str* seq_assembly,
   }
 }
 
-void extend_one(const Kmer& kmer, vec_str* seq_assembly, 
+void extend_one(const Kmer& kmer, vec_str* seq_assembly,
             vec_score* score_assembly, vec_int* dbsnp, vec_edge* edges,
             map_pkmer* kmers_not_used, const map_kmer& kmers,
             map_uint* k_vertex, const bool& left, const size_t& kmer_len,
@@ -704,7 +693,7 @@ bool extend(const Kmer& kmer, const string& nuc_backtrack,
   if (*left) {
     if (nb_right >= 1) {
       if ((*seq_assembly)[vertex].size() != kmer_len)
-        backtrack_new_vertex(kmer, seq_assembly, score_assembly, dbsnp, 
+        backtrack_new_vertex(kmer, seq_assembly, score_assembly, dbsnp,
                              k_vertex, edges, (*left), kmer_len, v_param);
 
       extend_many(kmer, seq_assembly, score_assembly, dbsnp, edges,
@@ -724,7 +713,7 @@ bool extend(const Kmer& kmer, const string& nuc_backtrack,
   } else {
     if (nb_left >= 1) {
       if ((*seq_assembly)[vertex].size() != kmer_len)
-        backtrack_new_vertex(kmer, seq_assembly, score_assembly, dbsnp, 
+        backtrack_new_vertex(kmer, seq_assembly, score_assembly, dbsnp,
                              k_vertex, edges, (*left), kmer_len, v_param);
 
       extend_many(kmer, seq_assembly, score_assembly, dbsnp, edges,
@@ -874,7 +863,7 @@ void create_graph_assembly(const map_kmer& kmers,
   int num = connected_components(UG, &component[0]);
   cerr << "number of connected components: " << num << endl;
 
-  linear_assembly(kmers, seq_assembly, score_assembly, dbsnp, G, 
+  linear_assembly(kmers, seq_assembly, score_assembly, dbsnp, G,
                   component, kmer_len, v_samples, b_param, v_param);
 }
 
@@ -885,11 +874,10 @@ void print_help(string str_error = "") {
   if (str_error.compare("") != 0) {
     cerr << "Error: "<< str_error << endl;
   }
-  cerr << "Usage: -p file -k file -o file -d [file] [-l int] [-r]" << endl;
-  cerr << "-p file: input project file" << endl;
+  cerr << "Usage: -k file -o file [-p file] [-d file] [-l int] [-r]" << endl;
   cerr << "-k file: input kmer file" << endl;
   cerr << "-o file: output assembly file" << endl;
-  cerr << "[-v int]: diff max between log10(pvalue) of 2 overlapped kmer" << endl;
+  cerr << "[-p file]: input project file" << endl;
   cerr << "[-d file]: input dbSNP file" << endl;
   cerr << "[-l int]: length of k-mer (default: 31)" << endl;
   cerr << "[-r ]: check the reverse complement during k-mer "
@@ -900,10 +888,10 @@ void print_help(string str_error = "") {
 void get_args(int argc, char *argv[], bool_param* b_param,
               val_param* v_param) {
   int opt;
+  (*v_param)[F_PROJECT] = "";
   (*v_param)[K_LEN] = "31";
   (*v_param)[ASSEMBLY] = "1";
-  (*v_param)[PVALUE] = "0";
-  while ((opt = getopt(argc, argv, "p:k:o:v:d:l:r")) != -1) {
+  while ((opt = getopt(argc, argv, "k:o:p:d:l:r")) != -1) {
     switch (opt) {
     case 'p':
       (*v_param)[F_PROJECT] = optarg;
@@ -913,13 +901,6 @@ void get_args(int argc, char *argv[], bool_param* b_param,
       break;
     case 'o':
       (*v_param)[F_OUT] = optarg;
-      break;
-    case 'v':
-      (*v_param)[PVALUE] = optarg;
-      (*b_param)[PVALUE] = true;
-      if (atoi((*v_param)[PVALUE].c_str()) < 0) {
-        print_help("Value after -v need to be an int >= 0");
-      }
       break;
     case 'd':
       (*v_param)[DBSNP] = optarg;
