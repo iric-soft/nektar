@@ -1,4 +1,4 @@
-# NEKTAR : NEw Kmer Tool for Analysis of Reads#
+# NEKTAR : NEw Kmer Tool for Analysis of Reads
 
 This repository holds several tools to extract the NEKTAR of kmers created by [jellyfish](http://www.genome.umd.edu/jellyfish.html).
 
