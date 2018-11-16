@@ -1,3 +1,8 @@
+#To generate FmIndex.py FmIndex_wrap.c FmIndex_wrap.cxx
+
+#swig -tcl -c++ FmIndex.i
+#swig -python -c++ FmIndex.i
+
 rm -r *.o
 
 g++ -g -Wall -fPIC -c util.cc BaseRep.cc SeqIter.cc StrDict.cc SeqStore.cc SeqRange.cc MultiRange.cc FmIndex.cc FmIndex_wrap.cxx -I/soft/bioinfo/linux_RH6/python-2.7.6/include/python2.7/ -lz -std=c++0x -fopenmp -lm
