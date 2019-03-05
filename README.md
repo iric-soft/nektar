@@ -5,6 +5,7 @@ This repository holds several tools to extract the NEKTAR of kmers created by [j
 # Requirements #
 * gcc/4.9.3 jellyfish/2.2.3 python/2.7.6
 * for kmer_assembly: ulimit -s unlimited
+* [boost](https://www.boost.org/)
 
 # Install #
 * Go in fmindex folder and execute the script ./install.sh
