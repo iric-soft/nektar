@@ -17,7 +17,7 @@ This repository holds several tools to extract the NEKTAR of kmers created by [j
 * *path_to*/kmer_assembly -h
 
 # Usage #
-kmer_assembly -k kmer.tsv -p design.tsv -o test.res 
+kmer_assembly -k kmer.tsv -p project.tsv -o test.res 
 
 * project.tsv: tabulated file with 3 columns
 ```
