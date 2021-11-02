@@ -876,7 +876,7 @@ void print_help(string str_error = "") {
   }
   cerr << "Usage: -k file -o file [-p file] [-d file] [-l int] [-r]" << endl;
   cerr << "-k file: input kmer file" << endl;
-  cerr << "-o file: output assembly file" << endl;
+  cerr << "-o dir: output assembly directory" << endl;
   cerr << "[-p file]: input project file" << endl;
   cerr << "[-d file]: input dbSNP file" << endl;
   cerr << "[-l int]: length of k-mer (default: 31)" << endl;
@@ -968,3 +968,4 @@ int main(int argc, char *argv[]) {
   cerr  <<  "Time : " << static_cast<float>(end-start)/CLOCKS_PER_SEC << "\n";
   return 0;
 }
+ry
