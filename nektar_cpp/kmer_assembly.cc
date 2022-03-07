@@ -968,4 +968,3 @@ int main(int argc, char *argv[]) {
   cerr  <<  "Time : " << static_cast<float>(end-start)/CLOCKS_PER_SEC << "\n";
   return 0;
 }
-ry
